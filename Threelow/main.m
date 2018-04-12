@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
         
         while (gameOn) {
             NSString *parsedInput = [inputHandler parse];
-            
+        
             if ([parsedInput isEqualToString:@"roll"]) {
                 if ([[gameController heldDices] count] == 0) {
                     
@@ -33,8 +33,11 @@ int main(int argc, const char * argv[]) {
                     for (int i=0; i < 5; i++) {
                         NSLog(@"Dice %i rolls: %@", [[[gameController dices] objectAtIndex:i] diceNumber], [[[gameController dices] objectAtIndex:i] randomizeVal]);
                     }
+                    [gameController score];
                 }
                 else {
+                    
+                    // PRINT HELD DICES + RANDOM DICES
                     for (Dice *d in [gameController heldDices]) {
                         NSLog(@"%@", d);
                     }
@@ -43,34 +46,45 @@ int main(int argc, const char * argv[]) {
                             NSLog(@"Dice %i rolls: %@", [d diceNumber], [d randomizeVal]);
                         }
                     }
+                    [gameController score];
                 }
                 NSLog(@"Which dice do you want to hold? Enter 0 if none.");
                 NSString *numDice = [inputHandler parse];
-                int indexDice = [numDice intValue] - 1;
-                if (![numDice isEqualToString:@"0"]) {
-                    int diceVal = [[[gameController dices] objectAtIndex:indexDice] diceValue];
+                if ([numDice containsString:@"1"] || [numDice containsString:@"2"] ||
+                    [numDice containsString:@"3"] || [numDice containsString:@"4"] ||
+                    [numDice containsString:@"5"]) {
                     
-                    // HOLD DICE
-                    [[[gameController dices] objectAtIndex:indexDice] setHoldState:1];
-                    [gameController holdDie:[NSString stringWithFormat:@"Dice %i rolls: [%i]", [[[gameController dices] objectAtIndex:indexDice] diceNumber], diceVal]];
-                    //                NSLog(@"held dices: %@", [gameController heldDices]);
-                    
-                    // UN-HOLD DICE
-                    NSLog(@"Are you sure you want to hold this dice? (y/n)\n");
-                    NSString *answer = [inputHandler parse];
-                    if ([answer isEqualToString:@"n"]) {
-                        [[[gameController dices] objectAtIndex:indexDice] setHoldState:0];
-                        [[gameController heldDices] removeObject:[NSString stringWithFormat:@"Dice %@ rolls: [%i]", numDice, diceVal]];
+                    for (int i = 0; i < [numDice length]; i++) {
+                        NSString *stringCharNum = [NSString stringWithFormat:@"%C", [numDice characterAtIndex:i]];
+                        int indexDice = [stringCharNum intValue] - 1;
+                        int diceVal = [[[gameController dices] objectAtIndex:indexDice] diceValue];
+                        int diceNumber = [[[gameController dices] objectAtIndex:indexDice] diceNumber];
+                        
+                        [[[gameController dices] objectAtIndex:indexDice] setHoldState:1];
+                        [gameController holdDie:[NSString stringWithFormat:@"Dice %i rolls: [%i]", diceNumber, diceVal]];
+                        
+                        NSLog(@"Dice %i rolls: %i, do you want to hold?", diceNumber, diceVal);
+                        
+                        // UN-HOLD DICE
+                        NSLog(@"Press n to undo or any key to continue\n");
+                        NSString *answer = [inputHandler parse];
+                        if ([answer isEqualToString:@"n"]) {
+                            [[[gameController dices] objectAtIndex:indexDice] setHoldState:0];
+                            [[gameController heldDices] removeObject:[NSString stringWithFormat:@"Dice %@ rolls: [%i]", stringCharNum, diceVal]];
+                        }
                     }
                     NSLog(@"held dices: %@", [gameController heldDices]);
                 }
-            }
-            if ([parsedInput isEqualToString:@"reset"]) {
-                [gameController resetDice];
+                else {
+                    continue;
+                }
             }
             if ([parsedInput isEqualToString:@"quit"]) {
                 gameOn = NO;
                 break;
+            }
+            if ([parsedInput isEqualToString:@"reset"]) {
+                [gameController resetDice];
             }
         }
     }

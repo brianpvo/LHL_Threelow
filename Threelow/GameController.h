@@ -16,5 +16,6 @@
 -(instancetype)initWithDices:(NSMutableArray *) dices;
 -(void) holdDie:(NSString *) dice;
 -(void) resetDice;
+-(void) score;
 
 @end
