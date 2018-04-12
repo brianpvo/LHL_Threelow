@@ -14,10 +14,19 @@
 {
     self = [super init];
     if (self) {
-        _dices = dices.mutableCopy;
-        _heldDices = [[NSMutableArray alloc] init];
+        _dices = dices;
+        _heldDices = [[NSMutableSet alloc] init];
     }
     return self;
+}
+
+-(void) holdDie:(NSString *) dice {
+    [_heldDices addObject:dice];
+    
+}
+
+-(void) resetDice {
+    [_heldDices removeAllObjects];
 }
 
 @end

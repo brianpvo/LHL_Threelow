@@ -10,18 +10,27 @@
 
 @implementation Dice
 
+- (instancetype)initWithDiceNum:(int) num
+{
+    self = [super init];
+    if (self) {
+        _diceNumber = num;
+        _holdState = 0;
+    }
+    return self;
+}
+
 -(NSString *) randomizeVal {
         _value = arc4random_uniform(6) + 1;
     return [NSString stringWithFormat:@"%i", _value];
 }
 
--(NSString *)holdDie {
-    return [NSString stringWithFormat:@"[%i]", _value];
+-(int) diceValue {
+    return _value;
 }
 
--(NSString *) resetDice {
-    
-    return @"";
+-(int) diceHoldState {
+    return _holdState;
 }
 
 @end

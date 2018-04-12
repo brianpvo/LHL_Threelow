@@ -11,11 +11,11 @@
 @interface Dice : NSObject
 
 @property int value;
+@property int diceNumber;
+@property int holdState;
 
+-(instancetype)initWithDiceNum:(int) num;
 -(NSString *) randomizeVal;
-
--(NSString *) holdDie;
-
--(NSString *) resetDice;
-
+-(int)diceValue;
+-(int)diceHoldState;
 @end
